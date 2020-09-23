@@ -11,3 +11,12 @@
 
 
 
+# Debugging:
+
+`systemctl  restart  prometheus-alertmanager`
+
+`prometheus-alertmanager`
+
+`amtool` cli for alertmanager:
+examples: https://github.com/prometheus/alertmanager#examples
+

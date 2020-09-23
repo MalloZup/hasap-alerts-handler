@@ -2,26 +2,18 @@
 
 global:
 receivers:
-      - name: default-reciver
+      - name: default-receiver
         webhook_configs:
-          - url: "http://10.162.30.75:9000/hooks-default"
+          - url: "http://10.162.29.223:9999/hooks-default"
+          - url: "http://10.162.32.38:9999/hooks-default"
 
       - name: ha-hook-receiver
         webhook_configs:
-          - url: "http://10.162.30.75:9000/hooks-ha"
+          - url: "http://10.162.29.223:9999/hooks-ha"
 
-      - name: sap-hook-receiver
+      - name: hana-primary-hook-receiver
         webhook_configs:
-          - url: "http://10.162.30.75:9000/hooks-sap"
-
-route:
-  group_by: ["alertname"]
-  group_wait: 10s
-  group_interval: 10s
-  repeat_interval: 10s
-  receiver: hana-receiver
-  routes:
-    -  receiver: hana-receiver
+          - url: "http://10.162.30.75:9999/hooks-sap"
 
 route:
   receiver: 'default-receiver'
@@ -34,14 +26,13 @@ route:
 
   routes:
   # All alerts with component netweaver or hana are dispatched to sap-hook.
-  - receiver: 'sap-hook-receiver'
+  - receiver: 'hana-primary-hook-receiver'
     # overwrite default root value
     # group_wait: 10s
     match_re:
-      service: netweaver|hana
+      component: hana
   # All alerts with the component label match this sub-route.
-  - receiver: 'frontend-pager'
+  - receiver: 'ha-hook-receiver'
     # group_by: [product, environment]
     match:
       component: sbd
-
