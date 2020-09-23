@@ -27,3 +27,7 @@ Deploy to the node
 `amtool` cli for alertmanager:
 examples: https://github.com/prometheus/alertmanager#examples
 
+
+## Debugging alerts
+
+`promtool check rules /path/to/example.rules.yml`

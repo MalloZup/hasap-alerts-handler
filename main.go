@@ -44,6 +44,7 @@ type PromAlert struct {
 }
 
 func handler1(_ http.ResponseWriter, req *http.Request) {
+
 	decoder := json.NewDecoder(req.Body)
 	var t PromAlert
 	err := decoder.Decode(&t)
