@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-
+	log.Infoln("starting handler")
 	handler1 := func(w http.ResponseWriter, _ *http.Request) {
 		io.WriteString(w, "Hello from a HandleFunc handler called via Prometheus alert\n")
 		log.Infoln("handler called via prometheus alert")
@@ -19,4 +19,5 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 }
