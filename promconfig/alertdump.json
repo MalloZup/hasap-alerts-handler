@@ -1,0 +1,62 @@
+{
+	"receiver": "default-receiver",
+	"status": "firing",
+	"alerts": [
+		{
+			"status": "firing",
+			"labels": {
+				"alertname": "node-filesystem-space-low",
+				"device": "10.162.32.134:/sapdata/sap_inst_media/51053787",
+				"fstype": "nfs4",
+				"instance": "192.168.23.10:9100",
+				"job": "hana",
+				"mountpoint": "/sapmedia/HANA",
+				"severity": "page"
+			},
+			"annotations": {
+				"summary": "Node filesystem space usage is higher than 85%"
+			},
+			"startsAt": "2020-09-23T12:05:11.594556946Z",
+			"endsAt": "0001-01-01T00:00:00Z",
+			"generatorURL": "http://dma3-monitoring:9090/graph?g0.expr=%28%28node_filesystem_size_bytes%7Bfstype%21%3D%22tmpfs%22%7D+-+node_filesystem_avail_bytes%29+%2F+node_filesystem_size_bytes+%2A+100%29+%3E+85\u0026g0.tab=1",
+			"fingerprint": "71a5f1ca4ba7dd4c"
+		},
+		{
+			"status": "firing",
+			"labels": {
+				"alertname": "node-filesystem-space-low",
+				"device": "10.162.32.134:/sapdata/sap_inst_media/51053787",
+				"fstype": "nfs4",
+				"instance": "192.168.23.11:9100",
+				"job": "hana",
+				"mountpoint": "/sapmedia/HANA",
+				"severity": "page"
+			},
+			"annotations": {
+				"summary": "Node filesystem space usage is higher than 85%"
+			},
+			"startsAt": "2020-09-23T12:05:16.594556946Z",
+			"endsAt": "0001-01-01T00:00:00Z",
+			"generatorURL": "http://dma3-monitoring:9090/graph?g0.expr=%28%28node_filesystem_size_bytes%7Bfstype%21%3D%22tmpfs%22%7D+-+node_filesystem_avail_bytes%29+%2F+node_filesystem_size_bytes+%2A+100%29+%3E+85\u0026g0.tab=1",
+			"fingerprint": "d2a7cd76bb964af9"
+		}
+	],
+	"groupLabels": {
+		"alertname": "node-filesystem-space-low"
+	},
+	"commonLabels": {
+		"alertname": "node-filesystem-space-low",
+		"device": "10.162.32.134:/sapdata/sap_inst_media/51053787",
+		"fstype": "nfs4",
+		"job": "hana",
+		"mountpoint": "/sapmedia/HANA",
+		"severity": "page"
+	},
+	"commonAnnotations": {
+		"summary": "Node filesystem space usage is higher than 85%"
+	},
+	"externalURL": "http://dma3-monitoring:9093",
+	"version": "4",
+	"groupKey": "{}:{alertname=\"node-filesystem-space-low\"}",
+	"truncatedAlerts": 0
+} 

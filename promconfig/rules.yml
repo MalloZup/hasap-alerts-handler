@@ -1,0 +1,30 @@
+groups:
+- name: hana filesystem monitoring
+  rules:
+# all critical severity will be handled as self-healing
+  - alert: HanaFileSystemFull
+    expr: ((node_filesystem_size_bytes{mountpoint="/hana"} - node_filesystem_avail_bytes{mountpoint="/hana"}  ) / node_filesystem_size_bytes{mountpoint="/hana"} * 100 ) > 95
+    labels:
+      severity: critical
+      selfhealing: true
+      component: hana
+    annotations:
+      summary: Hana file systems is full more then %95 percent
+
+  - alert: HanaFileSystemHalfFull
+    expr: ((node_filesystem_size_bytes{mountpoint="/hana"} - node_filesystem_avail_bytes{mountpoint="/hana"}  ) / node_filesystem_size_bytes{mountpoint="/hana"} * 100 ) > 50
+    labels:
+      severity: warning
+      component: hana
+    annotations:
+      summary: Hana file systems is full more then %95 percent
+
+
+  - alert: HandDiskWillFullIn1Hour
+    expr: predict_linear(node_filesystem_free{job="node"}[1h], 4 * 3600) < 0
+    for: 5m
+    labels:
+      severity: warning
+      component: hana
+    annotations:
+      summary: Hana file systems will be full in 4 hours

@@ -15,7 +15,6 @@ The alert handler serve as central component for building reactive self-healing 
 
 It is main functionality is to handle Prometheus alerts automatically, which are fired by Prometheus.
 
-
 # Devel 
 
 * build: `go build ./`
@@ -35,4 +34,3 @@ examples: https://github.com/prometheus/alertmanager#examples
 ## Debugging alerts
 
 `promtool check rules /path/to/example.rules.yml`
-:q
