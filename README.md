@@ -4,7 +4,7 @@
 ## Table of Content
 
 - [Architecture](doc/design.md)
-- [API]((doc/api.md)
+- [API](doc/api.md)
 - [Quickstart](doc/quickstart.md)
 - [Devel](#devel)
 
@@ -35,3 +35,4 @@ examples: https://github.com/prometheus/alertmanager#examples
 ## Debugging alerts
 
 `promtool check rules /path/to/example.rules.yml`
+:q
