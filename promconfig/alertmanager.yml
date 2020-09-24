@@ -11,7 +11,7 @@ receivers:
         webhook_configs:
           - url: "http://10.162.29.223:9999/hooks-ha"
 
-      - name: hana-primary-hook-receiver
+      - name: hana-hook-receiver
         webhook_configs:
           - url: "http://10.162.30.75:9999/hooks-sap"
 
@@ -26,7 +26,7 @@ route:
 
   routes:
   # All alerts with component netweaver or hana are dispatched to sap-hook.
-  - receiver: 'hana-primary-hook-receiver'
+  - receiver: 'hana-hook-receiver'
     # overwrite default root value
     # group_wait: 10s
     match_re:

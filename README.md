@@ -19,7 +19,7 @@ The alert-handler share a common declarative API with the alertmanager (based on
 
 # Devel 
 
-* build: `go build ./`
+* build: `go build .`
 
 Deploy to the node
 
@@ -32,6 +32,10 @@ Deploy to the node
 `amtool` cli for alertmanager:
 examples: https://github.com/prometheus/alertmanager#examples
 
+## tests:
+
+Allocate big file
+```fallocate -l 4G fake2.img```
 
 ## Debugging alerts
 

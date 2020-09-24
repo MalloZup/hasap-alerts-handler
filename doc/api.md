@@ -61,5 +61,5 @@ ___
 
 ### severity: 
 * `Description`:  Describe the severity of an alert
-* `Values`: Critical,Major, Warning, Medium, Low
+* `Values`: Critical,Major,  Medium, Warning, Low
   
