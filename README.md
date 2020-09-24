@@ -3,7 +3,6 @@
 
 ## Table of Content
 
-- [Introduction](#introduction)
 - [Architecture](#architecture)
 - [API](#api)
 - [Quickstart](#quickstart)
@@ -19,11 +18,12 @@ It is main functionality is to handle Prometheus alerts automatically, which are
 
 # Architecture
 
-See [doc/design.md](doc/design.md)
+See [design](doc/design.md)
 
 
 # Quickstart
 
+See [quickstart](doc/quickstart.md)
 
 
 # API:
