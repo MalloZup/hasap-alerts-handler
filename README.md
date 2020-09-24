@@ -3,9 +3,9 @@
 
 ## Table of Content
 
-- [Architecture](#architecture)
-- [API](#api)
-- [Quickstart](#quickstart)
+- [Architecture](doc/design.md)
+- [API]((doc/api.md)
+- [Quickstart](doc/quickstart.md)
 - [Devel](#devel)
 
 
@@ -15,19 +15,6 @@ The alert handler serve as central component for building reactive self-healing 
 
 It is main functionality is to handle Prometheus alerts automatically, which are fired by Prometheus.
 
-
-# Architecture
-
-See [design](doc/design.md)
-
-
-# Quickstart
-
-See [quickstart](doc/quickstart.md)
-
-# API:
-
-See [api](doc/api.md)
 
 # Devel 
 
