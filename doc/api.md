@@ -15,9 +15,9 @@ If the selfhealing is set true, the handler will selfheal based on the alert.
 * `Description:` This specify on which node/s the action of self-healing will run.
 * `Values allowed`: the values will be added.. WORKING IN PROGRESS (this will be update)
 
+Examples:
 
-
-Example:
+This alert will be scheduled on drbd nodes and the handler will be called (selfhealing true)
 ```
   - alert: AlertExampleSelfhealing
     expr: YourAlertExpr
@@ -29,9 +29,8 @@ Example:
       summary: drbd critical
 ```
 
-If the labels selfhealing is false, or absent the handler will not work.
 
-Example:
+The following labels run on drbd but no self-healing happens. See false and absent value.
 ```
   - alert: AlertExampleNotHealing
     expr: YourAlertExpr
@@ -42,6 +41,7 @@ Example:
     annotations:
       summary: drbd critical
 ```
+
 
 ```
   - alert: AlertExampleNotHealing
