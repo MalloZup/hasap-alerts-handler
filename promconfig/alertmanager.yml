@@ -6,14 +6,21 @@ receivers:
         webhook_configs:
           - url: "http://10.162.29.223:9999/hooks-default"
           - url: "http://10.162.32.38:9999/hooks-default"
+          # this is for debugging
+          - url: "http://10.163.16.126:9999/hooks-default"
 
       - name: ha-hook-receiver
         webhook_configs:
           - url: "http://10.162.29.223:9999/hooks-ha"
+          # this is for debugging
+          - url: "http://10.163.16.126:9999/hooks-default"
 
       - name: hana-hook-receiver
         webhook_configs:
-          - url: "http://10.162.30.75:9999/hooks-sap"
+          - url: "http://10.162.29.223:9999/hooks-sap"
+          # this is for debugging
+          - url: "http://10.163.16.126:9999/hooks-sap"
+
 
 route:
   receiver: 'default-receiver'
