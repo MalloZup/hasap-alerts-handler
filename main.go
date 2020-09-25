@@ -39,8 +39,53 @@ type PromAlert struct {
 }
 
 type CrmMon struct {
-	XMLName        xml.Name `xml:"crm_mon"`
-	Version        string   `xml:"version,attr"`
+	XMLName   xml.Name `xml:"crm_mon"`
+	Version   string   `xml:"version,attr"`
+	Resources struct {
+		Resource []struct {
+			ID             string `xml:"id,attr"`
+			ResourceAgent  string `xml:"resource_agent,attr"`
+			Role           string `xml:"role,attr"`
+			Active         string `xml:"active,attr"`
+			Orphaned       string `xml:"orphaned,attr"`
+			Blocked        string `xml:"blocked,attr"`
+			Managed        string `xml:"managed,attr"`
+			Failed         string `xml:"failed,attr"`
+			FailureIgnored string `xml:"failure_ignored,attr"`
+			NodesRunningOn string `xml:"nodes_running_on,attr"`
+			TargetRole     string `xml:"target_role,attr"`
+			Node           struct {
+				Name   string `xml:"name,attr"`
+				ID     string `xml:"id,attr"`
+				Cached string `xml:"cached,attr"`
+			} `xml:"node"`
+		} `xml:"resource"`
+		Clone []struct {
+			ID             string `xml:"id,attr"`
+			MultiState     string `xml:"multi_state,attr"`
+			Unique         string `xml:"unique,attr"`
+			Managed        string `xml:"managed,attr"`
+			Failed         string `xml:"failed,attr"`
+			FailureIgnored string `xml:"failure_ignored,attr"`
+			Resource       []struct {
+				ID             string `xml:"id,attr"`
+				ResourceAgent  string `xml:"resource_agent,attr"`
+				Role           string `xml:"role,attr"`
+				Active         string `xml:"active,attr"`
+				Orphaned       string `xml:"orphaned,attr"`
+				Blocked        string `xml:"blocked,attr"`
+				Managed        string `xml:"managed,attr"`
+				Failed         string `xml:"failed,attr"`
+				FailureIgnored string `xml:"failure_ignored,attr"`
+				NodesRunningOn string `xml:"nodes_running_on,attr"`
+				Node           struct {
+					Name   string `xml:"name,attr"`
+					ID     string `xml:"id,attr"`
+					Cached string `xml:"cached,attr"`
+				} `xml:"node"`
+			} `xml:"resource"`
+		} `xml:"clone"`
+	} `xml:"resources"`
 	NodeAttributes struct {
 		Node []struct {
 			Name      string `xml:"name,attr"`
@@ -80,8 +125,7 @@ func isHanaNodePrimary() (bool, error) {
 		}
 		// check if primary attr is set, then hana is primary
 		for _, a := range n.Attribute {
-			//  <attribute name="hana_prd_site" value="PRIMARY_SITE_NAME"/>
-			if a.Value == "PRIMARY_SITE_NAME" {
+			if a.Value == "PRIM" && a.Name == "hana_prd_sync_state" {
 				return true, nil
 			}
 		}
