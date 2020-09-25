@@ -13,7 +13,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// TODO handle this via config file later on
 const handlerWebSrvPort = "9999"
 
 type PromAlert struct {
@@ -114,16 +113,20 @@ func isHanaNodePrimary() (bool, error) {
 		return false, fmt.Errorf("error could not get hostname %w", err)
 	}
 
+	// <clone id="msl_SAPHana_PRD_HDB00" multi_state="true" unique="false" managed="true" failed="false" failure_ignored="false">
+	//    <resource id="rsc_SAPHana_PRD_HDB00" resource_agent="ocf::suse:SAPHana" role="Stopped" active="false" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="0"/>
+	//     <resource id="rsc_SAPHana_PRD_HDB00" resource_agent="ocf::suse:SAPHana" role="Stopped" active="false" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="0"/>
+	//    </clone>
+
 	log.Debugf("isHanaNodePrimary method called, hostname: %s", hostname)
 
 	// TODO: verify if we can rely safely on this assumption
 	// that the node name of cluster(CIB) is equal to hostname
-
 	for _, n := range c.NodeAttributes.Node {
 		if n.Name != hostname {
 			continue
 		}
-		// check if primary attr is set, then hana is primary
+		// THIS IS WRONG check if primary attr is set, then hana is primary
 		for _, a := range n.Attribute {
 			if a.Value == "PRIM" && a.Name == "hana_prd_sync_state" {
 				return true, nil
@@ -166,6 +169,9 @@ func handlerHanaDiskFull(_ http.ResponseWriter, req *http.Request) {
 		if primary == true {
 			// todo: get the resource name dinamically, eg. the postfix
 			hanaResource := "msl_SAPHana_PRD_HDB00"
+
+			// TODO ensure we run this command only 1 time
+
 			cmd := exec.Command("/usr/sbin/crm", "resource", "move", hanaResource, "force")
 			log.Infoln("[SELFHEALING]: selfhealing HANA primary node. Migrating to other node")
 			err := cmd.Run()
