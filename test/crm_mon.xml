@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<crm_mon version="2.0.0">
+    <summary>
+        <stack type="corosync" />
+        <current_dc present="true" version="1.1.18+20180430.b12c320f5-3.9.4-b12c320f5" name="hana01" id="1084813327" with_quorum="true" />
+        <last_update time="Fri Sep 25 20:23:54 2020" />
+        <last_change time="Fri Sep 25 20:22:51 2020" user="root" client="crm_attribute" origin="hana01" />
+        <nodes_configured number="2" />
+        <resources_configured number="6" disabled="0" blocked="0" />
+        <cluster_options stonith-enabled="true" symmetric-cluster="true" no-quorum-policy="stop" maintenance-mode="false" />
+    </summary>
+    <nodes>
+        <node name="hana01" id="1084813327" online="true" standby="false" standby_onfail="false" maintenance="false" pending="false" unclean="false" shutdown="false" expected_up="true" is_dc="true" resources_running="4" type="member" />
+        <node name="hana02" id="1084813328" online="true" standby="false" standby_onfail="false" maintenance="false" pending="false" unclean="false" shutdown="false" expected_up="true" is_dc="false" resources_running="2" type="member" />
+    </nodes>
+    <resources>
+        <resource id="stonith-sbd" resource_agent="stonith:external/sbd" role="Started" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+            <node name="hana01" id="1084813327" cached="false"/>
+        </resource>
+        <resource id="rsc_ip_PRD_HDB00" resource_agent="ocf::heartbeat:IPaddr2" role="Started" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+            <node name="hana01" id="1084813327" cached="false"/>
+        </resource>
+        <clone id="msl_SAPHana_PRD_HDB00" multi_state="true" unique="false" managed="true" failed="false" failure_ignored="false" >
+            <resource id="rsc_SAPHana_PRD_HDB00" resource_agent="ocf::suse:SAPHana" role="Master" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+                <node name="hana01" id="1084813327" cached="false"/>
+            </resource>
+            <resource id="rsc_SAPHana_PRD_HDB00" resource_agent="ocf::suse:SAPHana" role="Slave" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+                <node name="hana02" id="1084813328" cached="false"/>
+            </resource>
+        </clone>
+        <clone id="cln_SAPHanaTopology_PRD_HDB00" multi_state="false" unique="false" managed="true" failed="false" failure_ignored="false" >
+            <resource id="rsc_SAPHanaTopology_PRD_HDB00" resource_agent="ocf::suse:SAPHanaTopology" role="Started" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+                <node name="hana01" id="1084813327" cached="false"/>
+            </resource>
+            <resource id="rsc_SAPHanaTopology_PRD_HDB00" resource_agent="ocf::suse:SAPHanaTopology" role="Started" active="true" orphaned="false" blocked="false" managed="true" failed="false" failure_ignored="false" nodes_running_on="1" >
+                <node name="hana02" id="1084813328" cached="false"/>
+            </resource>
+        </clone>
+    </resources>
+    <node_attributes>
+        <node name="hana01">
+            <attribute name="hana_prd_clone_state" value="PROMOTED" />
+            <attribute name="hana_prd_op_mode" value="logreplay" />
+            <attribute name="hana_prd_remoteHost" value="hana02" />
+            <attribute name="hana_prd_roles" value="4:P:master1:master:worker:master" />
+            <attribute name="hana_prd_site" value="Lauterbach" />
+            <attribute name="hana_prd_srmode" value="sync" />
+            <attribute name="hana_prd_sync_state" value="PRIM" />
+            <attribute name="hana_prd_version" value="2.00.030.00.1522210459" />
+            <attribute name="hana_prd_vhost" value="hana01" />
+            <attribute name="lpa_prd_lpt" value="1601058171" />
+            <attribute name="master-rsc_SAPHana_PRD_HDB00" value="150" />
+        </node>
+        <node name="hana02">
+            <attribute name="hana_prd_clone_state" value="DEMOTED" />
+            <attribute name="hana_prd_op_mode" value="logreplay" />
+            <attribute name="hana_prd_remoteHost" value="hana01" />
+            <attribute name="hana_prd_roles" value="4:S:master1:master:worker:master" />
+            <attribute name="hana_prd_site" value="Fulda" />
+            <attribute name="hana_prd_srmode" value="sync" />
+            <attribute name="hana_prd_sync_state" value="SOK" />
+            <attribute name="hana_prd_version" value="2.00.030.00.1522210459" />
+            <attribute name="hana_prd_vhost" value="hana02" />
+            <attribute name="lpa_prd_lpt" value="30" />
+            <attribute name="master-rsc_SAPHana_PRD_HDB00" value="100" />
+        </node>
+    </node_attributes>
+    <node_history>
+        <node name="hana01">
+            <resource_history id="rsc_ip_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="48" task="start" last-rc-change="Mon Aug  3 12:15:56 2020" last-run="Mon Aug  3 12:15:56 2020" exec-time="58ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="49" task="monitor" interval="10000ms" last-rc-change="Mon Aug  3 12:15:56 2020" exec-time="39ms" queue-time="0ms" rc="0" rc_text="ok" />
+            </resource_history>
+            <resource_history id="stonith-sbd" orphan="false" migration-threshold="5000">
+                <operation_history call="20" task="start" last-rc-change="Mon Aug  3 11:29:14 2020" last-run="Mon Aug  3 11:29:14 2020" exec-time="1274ms" queue-time="0ms" rc="0" rc_text="ok" />
+            </resource_history>
+            <resource_history id="rsc_SAPHanaTopology_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="23" task="start" last-rc-change="Mon Aug  3 11:29:34 2020" last-run="Mon Aug  3 11:29:34 2020" exec-time="2672ms" queue-time="1ms" rc="0" rc_text="ok" />
+                <operation_history call="24" task="monitor" interval="10000ms" last-rc-change="Mon Aug  3 11:29:37 2020" exec-time="3212ms" queue-time="0ms" rc="0" rc_text="ok" />
+            </resource_history>
+            <resource_history id="rsc_SAPHana_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="47" task="probe" last-rc-change="Mon Aug  3 12:15:25 2020" last-run="Mon Aug  3 12:15:25 2020" exec-time="2122ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="50" task="promote" last-rc-change="Mon Aug  3 12:15:56 2020" last-run="Mon Aug  3 12:15:56 2020" exec-time="1778ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="51" task="monitor" interval="60000ms" last-rc-change="Mon Aug  3 12:16:02 2020" exec-time="3119ms" queue-time="0ms" rc="8" rc_text="master" />
+            </resource_history>
+        </node>
+        <node name="hana02">
+            <resource_history id="rsc_ip_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="34" task="monitor" interval="10000ms" last-rc-change="Mon Aug  3 11:53:49 2020" exec-time="36ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="45" task="stop" last-rc-change="Mon Aug  3 12:15:56 2020" last-run="Mon Aug  3 12:15:56 2020" exec-time="51ms" queue-time="0ms" rc="0" rc_text="ok" />
+            </resource_history>
+            <resource_history id="rsc_SAPHanaTopology_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="20" task="start" last-rc-change="Mon Aug  3 11:29:34 2020" last-run="Mon Aug  3 11:29:34 2020" exec-time="2441ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="21" task="monitor" interval="10000ms" last-rc-change="Mon Aug  3 11:29:36 2020" exec-time="3079ms" queue-time="0ms[4611316.700153] serial8250: too much work for irq4
+" rc="0" rc_text="ok" />
+            </resource_history>
+            <resource_history id="rsc_SAPHana_PRD_HDB00" orphan="false" migration-threshold="5000">
+                <operation_history call="43" task="probe" last-rc-change="Mon Aug  3 12:15:27 2020" last-run="Mon Aug  3 12:15:27 2020" exec-time="2361ms" queue-time="0ms" rc="8" rc_text="master" />
+                <operation_history call="46" task="demote" last-rc-change="Mon Aug  3 12:15:56 2020" last-run="Mon Aug  3 12:15:56 2020" exec-time="847ms" queue-time="0ms" rc="0" rc_text="ok" />
+                <operation_history call="47" task="monitor" interval="61000ms" last-rc-change="Mon Aug  3 12:15:56 2020" exec-time="2518ms" queue-time="0ms" rc="0" rc_text="ok" />
+            </resource_history>
+        </node>
+    </node_history>
+    <tickets>
+    </tickets>
+    <bans>
+    </bans>
+</crm_mon>
