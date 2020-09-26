@@ -21,12 +21,12 @@ func TestAlertFiring(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// read body json from Prometheus alertmanager
 		decoder := json.NewDecoder(r.Body)
-		var alert AlertFire
+		alert := make([]AlertFire, 1)
 		decoder.Decode(&alert)
-		t.Log(alert.Status)
-		t.Log(alert.Labels.Component)
-		if alert.GeneratorURL != "unit-test" {
-			t.Errorf("got %s expected unit-test", alert.GeneratorURL)
+		t.Log(alert[0].Status)
+		t.Log(alert[0].Labels.Component)
+		if alert[0].GeneratorURL != "unit-test" {
+			t.Errorf("got %s expected unit-test", alert[0].GeneratorURL)
 		}
 	}))
 	defer ts.Close()

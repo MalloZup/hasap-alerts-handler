@@ -3,10 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -51,7 +48,9 @@ type AlertFire struct {
 }
 
 func (alert *AlertFire) sendAlert(url string) {
-	body := &alert
+	alerts := make([]AlertFire, 1)
+	alerts[0] = *alert
+	body := alerts
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(body)
 	req, err := http.NewRequest("POST", url, buf)
@@ -63,10 +62,6 @@ func (alert *AlertFire) sendAlert(url string) {
 	if err != nil {
 		log.Error(err)
 	}
-
+	log.Infof("Alert from handler to alertmanager sent %s", alert.Labels.Alertname)
 	defer res.Body.Close()
-
-	fmt.Println("response Status:", res.Status)
-	// Print the body to the stdout
-	io.Copy(os.Stdout, res.Body)
 }
