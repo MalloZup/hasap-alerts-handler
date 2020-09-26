@@ -71,7 +71,7 @@ func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Req
 	var alerts PromAlert
 	err := decoder.Decode(&alerts)
 	if err != nil {
-		log.Warnln(err)
+		log.Warnf("error by decoding json from hana-handler http: %s", err)
 	}
 
 	log.Infof("HanaDiskFullHandler called by %s", alerts.Receiver)
