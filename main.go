@@ -2,16 +2,46 @@ package main
 
 import (
 	"encoding/json"
+
+	"fmt"
 	"net/http"
+	"os"
+
+	"runtime"
 
 	log "github.com/sirupsen/logrus"
+	flag "github.com/spf13/pflag"
 )
 
 const (
 	handlerWebSrvPort  = "9999"
+	version            = "0.0.1"
 	sapHandlerName     = "/hooks-sap"
 	defautlHandlerName = "/hooks-default"
 )
+
+var (
+	// the time the binary was built
+	buildDate string
+	// global --help flag
+	helpFlag *bool
+	// global --version flag
+	versionFlag *bool
+)
+
+func showVersion() {
+	fmt.Printf("version %s\nbuilt with %s %s/%s %s\n", version, runtime.Version(), runtime.GOOS, runtime.GOARCH, buildDate)
+	os.Exit(0)
+}
+
+func init() {
+	flag.StringP("port", "p", handlerWebSrvPort, "The port number to listen on for http alerts event")
+	flag.StringP("alertserver", "a", "", "prometheus alertmanager server IP")
+	flag.CommandLine.SortFlags = false
+
+	helpFlag = flag.BoolP("help", "h", false, "show this help message")
+	versionFlag = flag.BoolP("version", "v", false, "show version and build information")
+}
 
 // default handler. this is where the alerts witch doesn't match anything goes
 func defaultHandler(_ http.ResponseWriter, req *http.Request) {
@@ -26,6 +56,17 @@ func defaultHandler(_ http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+
+	flag.Parse()
+
+	switch {
+	case *helpFlag:
+		flag.Usage()
+		os.Exit(0)
+	case *versionFlag:
+		fmt.Printf("version %s\nbuilt with %s %s/%s %s\n", version, runtime.Version(), runtime.GOOS, runtime.GOARCH, buildDate)
+		os.Exit(0)
+	}
 
 	log.Infof("starting handler on port: %s", handlerWebSrvPort)
 
