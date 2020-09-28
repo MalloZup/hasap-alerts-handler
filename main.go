@@ -37,6 +37,7 @@ func showVersion() {
 func init() {
 	flag.StringP("port", "p", handlerWebSrvPort, "The port number to listen on for http alerts event")
 	flag.StringP("alertserver", "a", "", "prometheus alertmanager server IP")
+	flag.StringP("config", "c", "", "The path to a custom configuration file. NOTE: it must be in yaml format.")
 	flag.CommandLine.SortFlags = false
 
 	helpFlag = flag.BoolP("help", "h", false, "show this help message")
@@ -68,6 +69,13 @@ func main() {
 		os.Exit(0)
 	}
 
+	configFile, err := Config(flag.CommandLine)
+	if err != nil {
+		log.Fatalf("Could not initialize config: %s", err)
+	}
+
+	log.Info(configFile.Get("port"))
+
 	log.Infof("starting handler on port: %s", handlerWebSrvPort)
 
 	var a *AlertFire
@@ -90,7 +98,7 @@ func main() {
 	http.HandleFunc(defautlHandlerName, defaultHandler)
 
 	// TODO: serve webserver (future https)
-	err := http.ListenAndServe(":"+handlerWebSrvPort, nil)
+	err = http.ListenAndServe(":"+handlerWebSrvPort, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}

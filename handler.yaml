@@ -1,0 +1,3 @@
+port: 9998
+alertserver: 10.0.0.1
+foobar: bar
