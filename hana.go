@@ -56,6 +56,9 @@ type HanaDiskFull struct {
 	mu sync.Mutex
 }
 
+// TODO read this from config
+const alertManagerIP = "10.10.0.1"
+
 // handle when Hana Primary node has disk full
 func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Request) {
 	// see type description for this mutex
@@ -114,7 +117,19 @@ func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Req
 			log.Infoln("[SELFHEALING]: selfhealing HANA primary node. Migrating to other node")
 			err := cmd.Run()
 			if err != nil {
-				log.Warnln("[CRITICAL]: move resource hana resource")
+
+				var a *AlertFire
+				a = new(AlertFire)
+				a.Status = "firing"
+				a.Labels.Alertname = "HanaDiskHandlerFailure"
+				a.Labels.Component = "fail to selfhealing hana disk"
+				a.Labels.Severity = "critical"
+				a.Labels.Instance = nodeHostname
+				a.Annotations.Summary = "alert-handler failed to self-heal"
+				a.GeneratorURL = "unit-test"
+				a.sendAlert("http://" + alertManagerIP + ":9093/api/v1/alerts")
+
+				log.Warnln("[CRITICAL]: move resource hana resource failed")
 			}
 
 			// wait until the hana primary has migrated
