@@ -37,6 +37,7 @@ func showVersion() {
 func init() {
 	flag.StringP("port", "p", handlerWebSrvPort, "The port number to listen on for http alerts event")
 	flag.StringP("alertserver", "a", "", "prometheus alertmanager server IP")
+	flag.StringP("log-level", "l", "info", "log level of the handler")
 	flag.StringP("config", "c", "", "The path to a custom configuration file. NOTE: it must be in yaml format.")
 	flag.CommandLine.SortFlags = false
 
@@ -74,9 +75,10 @@ func main() {
 		log.Fatalf("Could not initialize config: %s", err)
 	}
 
-	log.Info(configFile.Get("port"))
+	portWebHandler := configFile.GetString("port")
 
-	log.Infof("starting handler on port: %s", handlerWebSrvPort)
+	log.Infof("[SETUP]: starting handler on port: %s", portWebHandler)
+	log.Infof("[SETUP]: logLevel set to \"%s\" level", configFile.GetString("log-level"))
 
 	// register the various handler
 	h := new(HanaDiskFull)
@@ -86,7 +88,7 @@ func main() {
 	http.HandleFunc(defautlHandlerName, defaultHandler)
 
 	// TODO: serve webserver (future https)
-	err = http.ListenAndServe(":"+handlerWebSrvPort, nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", portWebHandler), nil)
 	if err != nil {
 		log.Fatalln(err)
 	}

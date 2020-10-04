@@ -51,7 +51,8 @@ func loadConfigurationAutomatically(config *viper.Viper) error {
 
 	if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 		log.Infof("Could not discover configuration file: %s", err)
-		log.Info("Default configuration values will be used")
+		log.Info("Fallingback to default values.")
+		log.Warn("NO Alerts will be sent to alertmanager in case of failures. See alertmanagerIP variable for this")
 		return nil
 	}
 

@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	//"github.com/MalloZup/hasap-alerts-handler/internal"
 	log "github.com/sirupsen/logrus"
@@ -53,21 +54,15 @@ type CrmMon struct {
 // Prevent that an handler is called multiple times until it performing operation
 // the mutex will ensure that we run only 1 handler until it finish
 type HanaDiskFull struct {
-	mu sync.Mutex
+	mu             sync.Mutex
+	alertManagerIP string
 }
-
-// TODO read this from config
-const alertManagerIP = "10.10.0.1"
 
 // handle when Hana Primary node has disk full
 func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Request) {
 	// see type description for this mutex
 	ns.mu.Lock()
 	defer ns.mu.Unlock()
-
-	cmd := exec.Command("sleep", "30")
-	log.Infoln("--- SLEEPING")
-	cmd.Run()
 
 	// read body json from Prometheus alertmanager
 	decoder := json.NewDecoder(req.Body)
@@ -87,6 +82,8 @@ func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Req
 			strings.ToLower(a.Labels.Selfhealing) != "true" {
 			continue
 		}
+
+		// TODO: we need to check if the alerts was called by alertName HanaFileSystemFull
 
 		// read crm_mon xml for detecting if hana is primary on node
 		var cMon *CrmMon
@@ -117,22 +114,34 @@ func (ns *HanaDiskFull) handlerHanaDiskFull(_ http.ResponseWriter, req *http.Req
 			log.Infoln("[SELFHEALING]: selfhealing HANA primary node. Migrating to other node")
 			err := cmd.Run()
 			if err != nil {
-
-				var a *AlertFire
-				a = new(AlertFire)
-				a.Status = "firing"
-				a.Labels.Alertname = "HanaDiskHandlerFailure"
-				a.Labels.Component = "fail to selfhealing hana disk"
-				a.Labels.Severity = "critical"
-				a.Labels.Instance = nodeHostname
-				a.Annotations.Summary = "alert-handler failed to self-heal"
-				a.GeneratorURL = "unit-test"
-				a.sendAlert("http://" + alertManagerIP + ":9093/api/v1/alerts")
+				// it we don't have an alertManagerIP don't try to send alerts
+				// TODO: think to refactor this in a kind of logger
+				if ns.alertManagerIP != "" {
+					var a *AlertFire
+					a = new(AlertFire)
+					a.Status = "firing"
+					a.Labels.Alertname = "HanaDiskHandlerFailure"
+					a.Labels.Component = "fail to selfhealing hana disk"
+					a.Labels.Severity = "critical"
+					a.Labels.Instance = nodeHostname
+					a.Annotations.Summary = "alert-handler failed to self-heal"
+					a.GeneratorURL = "unit-test"
+					a.sendAlert("http://" + ns.alertManagerIP + ":9093/api/v1/alerts")
+				}
 
 				log.Warnln("[CRITICAL]: move resource hana resource failed")
 			}
 
-			// wait until the hana primary has migrated
+			// this is not clean but ok for demo.
+			// we loop until the primary node is not anymore primary
+			// TODO  wait until the hana primary has migrated
+			for i := 1; i <= 10; i++ {
+				isPrimary := lookUpHanaNodePrimary(cMon, nodeHostname)
+				if isPrimary == "" {
+					log.Infof("HANA %s node is not primary anymore...", nodeHostname)
+				}
+				time.Sleep(5 * time.Second)
+			}
 
 		}
 	}
