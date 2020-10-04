@@ -91,7 +91,5 @@ func setLogLevel(level string) {
 		log.SetLevel(log.InfoLevel)
 	case "debug":
 		log.SetLevel(log.DebugLevel)
-	default:
-		log.Warnln("Unrecognized minimum log level; using 'info' as default")
 	}
 }

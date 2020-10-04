@@ -21,7 +21,7 @@ groups:
 
 
   - alert: HandDiskWillFullIn1Hour
-    # looup the last 6 minutes of history, and calculate if the disk will be full
+    # lookup the last 6 minutes of history, and calculate if the disk will be full
     expr: predict_linear(node_filesystem_avail_bytes{mountpoint="/hana"}[6m], 600) < 1
     for: 5m
     labels:
